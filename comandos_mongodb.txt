@@ -1,0 +1,281 @@
+# Comandos MongoDB - Sistema E-commerce Clientes
+# Data: 7 de julho de 2025
+# Projeto: Sistema de gerenciamento de clientes para e-commerce
+
+# ==================================================
+# 1. CONEXÃO E CONFIGURAÇÃO INICIAL
+# ==================================================
+
+# Conectar ao MongoDB
+mongosh
+
+# Selecionar/criar banco de dados
+use ecommerce_db
+
+# Verificar bancos existentes
+show dbs
+
+# ==================================================
+# 2. CRIAÇÃO DA COLEÇÃO
+# ==================================================
+
+# Criar coleção de clientes
+db.createCollection("clientes")
+
+# Verificar coleções existentes
+show collections
+
+# ==================================================
+# 3. INSERÇÃO DE DADOS DE EXEMPLO
+# ==================================================
+
+# Inserir primeiro cliente (Ana Silva Santos)
+db.clientes.insertOne({
+  "nome": "Ana Silva Santos",
+  "email": "ana.silva@email.com",
+  "telefone": "(11) 98765-4321",
+  "endereco": {
+    "logradouro": "Rua das Palmeiras",
+    "numero": "456",
+    "complemento": "Apt 12",
+    "bairro": "Jardim Paulista",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "01234-567"
+  },
+  "produtos_adquiridos": [
+    {
+      "nome": "Notebook Dell",
+      "data_aquisicao": "2025-01-10 14:30:00"
+    },
+    {
+      "nome": "Mouse Logitech",
+      "data_aquisicao": "2025-01-10 14:30:00"
+    }
+  ],
+  "historico_compras": [
+    {
+      "data": "2025-01-10",
+      "valor": 2500.00,
+      "produtos": ["Notebook Dell", "Mouse Logitech"],
+      "status": "Concluída"
+    }
+  ],
+  "data_criacao": new Date(),
+  "data_atualizacao": new Date()
+})
+
+# Inserir segundo cliente (Carlos Oliveira)
+db.clientes.insertOne({
+  "nome": "Carlos Oliveira",
+  "email": "carlos.oliveira@email.com",
+  "telefone": "(21) 99888-7777",
+  "endereco": {
+    "logradouro": "Avenida Atlântica",
+    "numero": "1000",
+    "complemento": "Cobertura",
+    "bairro": "Copacabana",
+    "cidade": "Rio de Janeiro",
+    "estado": "RJ",
+    "cep": "22021-001"
+  },
+  "produtos_adquiridos": [
+    {
+      "nome": "Smartphone Samsung",
+      "data_aquisicao": "2025-01-05 10:15:00"
+    },
+    {
+      "nome": "Fone Bluetooth",
+      "data_aquisicao": "2025-01-05 10:15:00"
+    },
+    {
+      "nome": "Carregador Portátil",
+      "data_aquisicao": "2025-01-05 10:15:00"
+    }
+  ],
+  "historico_compras": [
+    {
+      "data": "2025-01-05",
+      "valor": 1800.00,
+      "produtos": ["Smartphone Samsung", "Fone Bluetooth", "Carregador Portátil"],
+      "status": "Concluída"
+    }
+  ],
+  "data_criacao": new Date(),
+  "data_atualizacao": new Date()
+})
+
+# Inserir terceiro cliente (Maria Fernanda Costa)
+db.clientes.insertOne({
+  "nome": "Maria Fernanda Costa",
+  "email": "maria.costa@email.com",
+  "telefone": "(31) 97777-8888",
+  "endereco": {
+    "logradouro": "Rua da Liberdade",
+    "numero": "789",
+    "complemento": "",
+    "bairro": "Savassi",
+    "cidade": "Belo Horizonte",
+    "estado": "MG",
+    "cep": "30112-000"
+  },
+  "produtos_adquiridos": [
+    {
+      "nome": "Tablet iPad",
+      "data_aquisicao": "2024-12-28 16:45:00"
+    }
+  ],
+  "historico_compras": [
+    {
+      "data": "2024-12-28",
+      "valor": 3200.00,
+      "produtos": ["Tablet iPad"],
+      "status": "Concluída"
+    }
+  ],
+  "data_criacao": new Date(),
+  "data_atualizacao": new Date()
+})
+
+# ==================================================
+# 4. CONSULTAS E VERIFICAÇÕES
+# ==================================================
+
+# Listar todos os clientes
+db.clientes.find()
+
+# Listar clientes formatado (mais legível)
+db.clientes.find().pretty()
+
+# Contar total de clientes
+db.clientes.countDocuments()
+
+# Buscar cliente por nome
+db.clientes.findOne({"nome": "Ana Silva Santos"})
+
+# Buscar clientes por cidade
+db.clientes.find({"endereco.cidade": "São Paulo"})
+
+# Buscar clientes que compraram produtos específicos
+db.clientes.find({"produtos_adquiridos.nome": "Notebook Dell"})
+
+# ==================================================
+# 5. ÍNDICES (para performance)
+# ==================================================
+
+# Criar índice único para email
+db.clientes.createIndex({"email": 1}, {unique: true})
+
+# Criar índice para nome (busca rápida)
+db.clientes.createIndex({"nome": 1})
+
+# Criar índice para cidade
+db.clientes.createIndex({"endereco.cidade": 1})
+
+# Listar índices criados
+db.clientes.getIndexes()
+
+# ==================================================
+# 6. OPERAÇÕES DE ATUALIZAÇÃO
+# ==================================================
+
+# Atualizar telefone de um cliente
+db.clientes.updateOne(
+  {"email": "ana.silva@email.com"},
+  {
+    $set: {
+      "telefone": "(11) 98765-4322",
+      "data_atualizacao": new Date()
+    }
+  }
+)
+
+# Adicionar produto a um cliente existente
+db.clientes.updateOne(
+  {"email": "carlos.oliveira@email.com"},
+  {
+    $push: {
+      "produtos_adquiridos": {
+        "nome": "Capa para Smartphone",
+        "data_aquisicao": "2025-07-07 09:30:00"
+      }
+    },
+    $set: {"data_atualizacao": new Date()}
+  }
+)
+
+# ==================================================
+# 7. ESTATÍSTICAS E RELATÓRIOS
+# ==================================================
+
+# Total de clientes por estado
+db.clientes.aggregate([
+  {
+    $group: {
+      _id: "$endereco.estado",
+      total: { $sum: 1 }
+    }
+  },
+  { $sort: { total: -1 } }
+])
+
+# Clientes com mais produtos
+db.clientes.aggregate([
+  {
+    $project: {
+      nome: 1,
+      email: 1,
+      total_produtos: { $size: "$produtos_adquiridos" }
+    }
+  },
+  { $sort: { total_produtos: -1 } }
+])
+
+# Valor total de compras por cliente
+db.clientes.aggregate([
+  {
+    $unwind: "$historico_compras"
+  },
+  {
+    $group: {
+      _id: {
+        nome: "$nome",
+        email: "$email"
+      },
+      valor_total: { $sum: "$historico_compras.valor" }
+    }
+  },
+  { $sort: { valor_total: -1 } }
+])
+
+# ==================================================
+# 8. BACKUP E MANUTENÇÃO
+# ==================================================
+
+# Verificar status da conexão
+db.runCommand({connectionStatus: 1})
+
+# Estatísticas da coleção
+db.clientes.stats()
+
+# Verificar tamanho do banco
+db.stats()
+
+# ==================================================
+# COMANDOS PARA EXPORT/IMPORT (executar no terminal)
+# ==================================================
+
+# Export da coleção para JSON
+# mongoexport --db=ecommerce_db --collection=clientes --out=clientes_backup.json --pretty
+
+# Import de backup
+# mongoimport --db=ecommerce_db --collection=clientes --file=clientes_backup.json
+
+# ==================================================
+# NOTAS IMPORTANTES
+# ==================================================
+# - Sempre fazer backup antes de operações críticas
+# - Usar índices para melhorar performance de consultas
+# - Validar dados antes da inserção
+# - Manter histórico de alterações com data_atualizacao
+# ==================================================
