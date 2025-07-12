@@ -69,17 +69,3 @@ clientes-ecomerce/
 2. Use a conexão: `mongodb://localhost:27017`
 3. Banco de dados: `ecommerce_db`
 4. Coleção: `clientes`
-
-## Problemas Comuns
-
-**Erro "Class 'MongoDB\Client' not found":**
-- Verifique se instalou a extensão MongoDB no PHP
-- Reinicie o Apache após configurar
-
-**Erro "Connection refused":**
-- Verifique se o MongoDB está rodando
-- No Windows: verifique nos Serviços se "MongoDB" está ativo
-
-**Não consegue conectar no Compass:**
-- Use: `mongodb://localhost:27017`
-- Verifique se o MongoDB está rodando na porta 27017
